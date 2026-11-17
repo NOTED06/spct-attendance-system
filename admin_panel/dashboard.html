@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Attendance Monitoring System</title>
+    <link rel="stylesheet" href="css/style.css?v=15">
+    <link rel="stylesheet" href="css/dashboard.css?v=15">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="images/spct-logo.png" alt="SPCT" class="sidebar-logo">
+            <div>
+                <h3>SPCT Attendance</h3>
+                <small>Admin Panel</small>
+            </div>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li class="menu-item active" data-page="dashboard">
+                <span class="material-icons">dashboard</span>
+                <span>Dashboard</span>
+            </li>
+            <li class="menu-item" data-page="attendance">
+                <span class="material-icons">assignment</span>
+                <span>Attendance Logs</span>
+                <span class="menu-badge" id="attendanceBadge" style="display:none;">0</span>
+            </li>
+            <li class="menu-item" data-page="instructors">
+                <span class="material-icons">people</span>
+                <span>Instructors</span>
+            </li>
+            <li class="menu-item" data-page="rooms">
+                <span class="material-icons">room</span>
+                <span>Rooms</span>
+            </li>
+            <li class="menu-item" data-page="schedules">
+                <span class="material-icons">schedule</span>
+                <span>Schedules</span>
+            </li>
+            <li class="menu-item" data-page="subjects">
+                <span class="material-icons">menu_book</span>
+                <span>Subjects</span>
+            </li>
+            <li class="menu-item" data-page="departments">
+                <span class="material-icons">apartment</span>
+                <span>Departments</span>
+            </li>
+            <li class="menu-item" data-page="checkers">
+                <span class="material-icons">person_add</span>
+                <span>Checkers</span>
+                <span class="menu-badge" id="checkerBadge" style="display:none;">0</span>
+            </li>
+            <li class="menu-item" data-page="reports">
+                <span class="material-icons">assessment</span>
+                <span>Reports</span>
+            </li>
+            <li class="menu-item" data-page="calendar">
+                <span class="material-icons">event_busy</span>
+                <span>Calendar</span>
+            </li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <span class="material-icons">account_circle</span>
+                <div>
+                    <span id="adminName">Admin</span>
+                    <small id="adminEmail">admin@spct.edu</small>
+                </div>
+            </div>
+            <button class="btn-logout" onclick="handleLogout()">
+                <span class="material-icons">logout</span>
+                Sign Out
+            </button>
+        </div>
+    </nav>
+
+    
+    <main class="main-content" id="mainContent">
+        
+        <header class="topbar">
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <span class="material-icons">menu</span>
+            </button>
+            <h2 id="pageTitle">Dashboard</h2>
+            <div class="topbar-search">
+                <span class="material-icons">search</span>
+                <input type="text" id="topbarSearch" oninput="handleGlobalSearch(this.value)" placeholder="Search current page...">
+            </div>
+            <div class="topbar-right">
+                
+                <div class="notification-wrapper" id="notificationWrapper">
+                    <button class="btn-notification" onclick="toggleNotifications()">
+                        <span class="material-icons">notifications</span>
+                        <span class="notif-badge" id="notifBadge" style="display:none;">0</span>
+                    </button>
+                    <div class="notif-dropdown" id="notifDropdown">
+                        <div class="notif-header">
+                            <div class="notif-header-left">
+                                <h4>Missed Checks</h4>
+                                <small id="notifSubtitle">Instructors not checked on time</small>
+                            </div>
+                            <button class="btn-mark-all-read" onclick="markAllNotifsRead()" title="Mark all as read">
+                                <span class="material-icons">done_all</span>
+                                <span>Mark All Read</span>
+                            </button>
+                        </div>
+                        <div class="notif-list" id="notifList">
+                            <div class="notif-empty">
+                                <span class="material-icons" style="font-size:40px;color:#ccc;display:block;margin-bottom:8px;">notifications_none</span>
+                                No missed checks
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <span class="date-display" id="currentDate"></span>
+            </div>
+        </header>
+
+        
+        <div class="page-container">
+
+            
+            <section class="page active" id="page-dashboard">
+                
+                <div class="summary-grid">
+                    <div class="summary-card card-total">
+                        <span class="material-icons">assignment</span>
+                        <div>
+                            <h3 id="totalToday">0</h3>
+                            <p>Total Today</p>
+                        </div>
+                    </div>
+                    <div class="summary-card card-present">
+                        <span class="material-icons">check_circle</span>
+                        <div>
+                            <h3 id="presentToday">0</h3>
+                            <p>Present</p>
+                        </div>
+                    </div>
+                    <div class="summary-card card-notteaching">
+                        <span class="material-icons">person_outline</span>
+                        <div>
+                            <h3 id="notTeachingToday">0</h3>
+                            <p>Not Teaching</p>
+                        </div>
+                    </div>
+                    <div class="summary-card card-late">
+                        <span class="material-icons">access_time</span>
+                        <div>
+                            <h3 id="lateToday">0</h3>
+                            <p>Late</p>
+                        </div>
+                    </div>
+                    <div class="summary-card card-absent">
+                        <span class="material-icons">cancel</span>
+                        <div>
+                            <h3 id="absentToday">0</h3>
+                            <p>Absent</p>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="schedule-status-banner" id="scheduleStatusBanner" style="display:none;">
+                    <span class="material-icons" id="bannerIcon">event_available</span>
+                    <div class="banner-text">
+                        <strong id="bannerTitle">Today's Classes</strong>
+                        <span id="bannerSubtitle"></span>
+                    </div>
+                </div>
+
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Recent Activity</h3>
+                        <button class="btn-text" onclick="navigateTo('attendance')">View All</button>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Instructor</th>
+                                    <th>Room</th>
+                                    <th>Status</th>
+                                    <th>Time</th>
+                                    <th>Checker</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentRecords">
+                                <tr><td colspan="5" class="empty-state">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            
+            <section class="page" id="page-attendance">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Attendance Logs</h3>
+                        <div class="filter-row">
+                            <input type="text" id="filterInstructor" class="form-input" placeholder="Search instructor..." oninput="loadAttendanceLogs()">
+                            <input type="date" id="filterDate" class="form-input" onchange="loadAttendanceLogs()">
+                            <select id="filterStatus" class="form-input" onchange="loadAttendanceLogs()">
+                                <option value="">All Status</option>
+                                <option value="Present">Present</option>
+                                <option value="Present (Not Teaching)">Present (Not Teaching)</option>
+                                <option value="Late">Late</option>
+                                <option value="Absent">Absent</option>
+                            </select>
+                            <button class="btn-secondary" onclick="exportAttendance()">
+                                <span class="material-icons">download</span> Export CSV
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Instructor</th>
+                                    <th>Room</th>
+                                    <th>Subject/Schedule</th>
+                                    <th>Status</th>
+                                    <th>Remarks</th>
+                                    <th>Time</th>
+                                    <th>Checker</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="attendanceTable">
+                                <tr><td colspan="9" class="empty-state">Select a date or filter to view records</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            
+            <section class="page" id="page-instructors">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Manage Instructors</h3>
+                        <button class="btn-primary" onclick="showInstructorModal()">
+                            <span class="material-icons">add</span> Add Instructor
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Department</th>
+                                    <th>Email</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="instructorsTable">
+                                <tr><td colspan="6" class="empty-state">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            
+            <section class="page" id="page-rooms">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Manage Rooms</h3>
+                        <button class="btn-primary" onclick="showRoomModal()">
+                            <span class="material-icons">add</span> Add Room
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Room Name</th>
+                                    <th>Building</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="roomsTable">
+                                <tr><td colspan="4" class="empty-state">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            
+            <section class="page" id="page-schedules">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Manage Schedules</h3>
+                        <button class="btn-primary" onclick="showScheduleModal()">
+                            <span class="material-icons">add</span> Add Schedule
+                        </button>
+                    </div>
+                    
+                    <div id="schedulesGrouped" class="schedules-grouped">
+                        <div class="empty-state">Loading...</div>
+                    </div>
+                </div>
+            </section>
+
+            
+            <section class="page" id="page-subjects">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Manage Subjects</h3>
+                        <button class="btn-primary" onclick="showSubjectModal()">
+                            <span class="material-icons">add</span> Add Subject
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Subject Code</th>
+                                    <th>Description / Name</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="subjectsTable">
+                                <tr><td colspan="4" class="empty-state">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            
+            <section class="page" id="page-departments">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Manage Departments</h3>
+                        <button class="btn-primary" onclick="showDepartmentModal()">
+                            <span class="material-icons">add</span> Add Department
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Department Code</th>
+                                    <th>Department Name</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="departmentsTable">
+                                <tr><td colspan="4" class="empty-state">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            
+            <section class="page" id="page-checkers">
+                
+                <div class="summary-grid" style="margin-bottom: 24px;">
+                    <div class="summary-card card-total">
+                        <span class="material-icons">people</span>
+                        <div>
+                            <h3 id="totalCheckersCount">0</h3>
+                            <p>Total Checkers</p>
+                        </div>
+                    </div>
+                    <div class="summary-card card-present">
+                        <span class="material-icons">verified_user</span>
+                        <div>
+                            <h3 id="activeCheckersCount">0</h3>
+                            <p>Active Checkers</p>
+                        </div>
+                    </div>
+                    <div class="summary-card card-late" id="pendingUpdatesSummaryCard">
+                        <span class="material-icons">update</span>
+                        <div>
+                            <h3 id="pendingUpdatesCount">0</h3>
+                            <p>Pending Updates</p>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="card" id="checkerUpdatesCard" style="margin-bottom: 24px;">
+                    <div class="card-header">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span class="material-icons" style="color: #F59E0B; font-size: 26px;">notifications_active</span>
+                            <div>
+                                <h3 style="margin: 0; display: flex; align-items: center; gap: 8px;">
+                                    Checker Updates & Corrections
+                                    <span class="badge badge-warning" id="checkerUpdatesCountBadge" style="display:none;">0 New</span>
+                                </h3>
+                                <small style="color: var(--text-secondary);">Real-time attendance status changes and corrections submitted by checkers</small>
+                            </div>
+                        </div>
+                        <button class="btn-secondary" id="btnMarkAllCheckerUpdatesRead" onclick="markAllCheckerUpdatesRead()" style="display:none;">
+                            <span class="material-icons">done_all</span> Mark All Read
+                        </button>
+                    </div>
+                    <div id="checkerUpdatesList" style="padding: 16px 20px;">
+                        <div class="empty-state" style="padding: 24px 0;">
+                            <span class="material-icons" style="font-size: 40px; color: #10B981; display: block; margin-bottom: 8px;">check_circle</span>
+                            <span style="font-weight: 500; color: var(--text-secondary);">No pending updates from checkers. All clear!</span>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="card" style="margin-bottom: 24px;">
+                    <div class="card-header">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span class="material-icons" style="color: var(--primary); font-size: 24px;">history</span>
+                            <div>
+                                <h3 style="margin: 0;">Today's Checks by Checkers</h3>
+                                <small style="color: var(--text-secondary);">Classroom attendance checks recorded today</small>
+                            </div>
+                        </div>
+                        <button class="btn-text" onclick="navigateTo('attendance')">View All in Logs &rarr;</button>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Checker</th>
+                                    <th>Instructor</th>
+                                    <th>Room</th>
+                                    <th>Subject / Schedule</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="checkerRecentActivityTable">
+                                <tr><td colspan="6" class="empty-state">No checks recorded today yet</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span class="material-icons" style="color: var(--primary); font-size: 24px;">manage_accounts</span>
+                            <div>
+                                <h3 style="margin: 0;">User Accounts (Checkers & Admins)</h3>
+                                <small style="color: var(--text-secondary);">Manage staff accounts authorized to check attendance or manage system</small>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                            <div class="filter-btn-group" style="display: flex; gap: 6px;">
+                                <button type="button" class="btn-secondary checker-filter-btn active" data-filter="all" onclick="setCheckerRoleFilter('all')" style="padding: 6px 12px; font-size: 12px;">All</button>
+                                <button type="button" class="btn-secondary checker-filter-btn" data-filter="checker" onclick="setCheckerRoleFilter('checker')" style="padding: 6px 12px; font-size: 12px;">Checkers</button>
+                                <button type="button" class="btn-secondary checker-filter-btn" data-filter="admin" onclick="setCheckerRoleFilter('admin')" style="padding: 6px 12px; font-size: 12px;">Admins</button>
+                            </div>
+                            <button class="btn-primary" onclick="showCheckerModal()">
+                                <span class="material-icons">person_add</span> Create Account
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Full Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Created</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="checkersTable">
+                                <tr><td colspan="6" class="empty-state">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            
+            <section class="page" id="page-reports">
+                
+                <div class="report-tabs">
+                    <button class="report-tab active" data-report-tab="general" onclick="switchReportTab('general')">
+                        <span class="material-icons">assignment</span> General Report
+                    </button>
+                    <button class="report-tab" data-report-tab="instructor" onclick="switchReportTab('instructor')">
+                        <span class="material-icons">person</span> Instructor Statistics
+                    </button>
+                    <button class="report-tab" data-report-tab="subject" onclick="switchReportTab('subject')">
+                        <span class="material-icons">menu_book</span> Subject Statistics
+                    </button>
+                </div>
+
+                
+                <div class="report-tab-content active" id="tab-general">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Generate Reports</h3>
+                        </div>
+                        <div class="report-controls">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Report Type</label>
+                                    <select id="reportType" class="form-input">
+                                        <option value="daily">Daily Report</option>
+                                        <option value="weekly">Weekly Report</option>
+                                        <option value="monthly">Monthly Report</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Start Date</label>
+                                    <input type="date" id="reportStart" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label>End Date</label>
+                                    <input type="date" id="reportEnd" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label>Instructor (optional)</label>
+                                    <select id="reportInstructor" class="form-input">
+                                        <option value="">All Instructors</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button class="btn-primary" onclick="generateReport()">
+                                    <span class="material-icons">assessment</span> Generate
+                                </button>
+                                <button class="btn-secondary" onclick="exportReport()">
+                                    <span class="material-icons">download</span> Export CSV
+                                </button>
+                                <button class="btn-excel" onclick="exportReportExcel()">
+                                    <span class="material-icons">grid_on</span> Export Excel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card" id="reportResults" style="display:none;">
+                        <div class="card-header">
+                            <h3 id="reportTitle">Report</h3>
+                        </div>
+                        <div class="summary-grid" id="reportSummary"></div>
+                        <div class="table-container">
+                            <table>
+                                <thead id="reportTableHead"></thead>
+                                <tbody id="reportTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="report-tab-content" id="tab-instructor">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Instructor Statistics</h3>
+                        </div>
+                        <div class="report-controls">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Start Date</label>
+                                    <input type="date" id="instrStatStart" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label>End Date</label>
+                                    <input type="date" id="instrStatEnd" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label>Department (optional)</label>
+                                    <select id="instrStatDept" class="form-input">
+                                        <option value="">All Departments</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button class="btn-primary" onclick="generateInstructorStats()">
+                                    <span class="material-icons">bar_chart</span> Generate
+                                </button>
+                                <button class="btn-secondary" onclick="exportInstructorStatsCSV()">
+                                    <span class="material-icons">download</span> Export CSV
+                                </button>
+                                <button class="btn-excel" onclick="exportInstructorStatsExcel()">
+                                    <span class="material-icons">grid_on</span> Export Excel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card" id="instrStatsResults" style="display:none;">
+                        <div class="card-header">
+                            <h3 id="instrStatsTitle">Instructor Statistics</h3>
+                        </div>
+                        <div class="summary-grid" id="instrStatsSummary"></div>
+                        <div class="table-container">
+                            <table>
+                                <thead id="instrStatsHead"></thead>
+                                <tbody id="instrStatsBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="report-tab-content" id="tab-subject">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Subject Statistics (per Instructor)</h3>
+                        </div>
+                        <div class="report-controls">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Start Date</label>
+                                    <input type="date" id="subjStatStart" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label>End Date</label>
+                                    <input type="date" id="subjStatEnd" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label>Instructor (optional)</label>
+                                    <select id="subjStatInstructor" class="form-input">
+                                        <option value="">All Instructors</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button class="btn-primary" onclick="generateSubjectStats()">
+                                    <span class="material-icons">bar_chart</span> Generate
+                                </button>
+                                <button class="btn-secondary" onclick="exportSubjectStatsCSV()">
+                                    <span class="material-icons">download</span> Export CSV
+                                </button>
+                                <button class="btn-excel" onclick="exportSubjectStatsExcel()">
+                                    <span class="material-icons">grid_on</span> Export Excel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card" id="subjStatsResults" style="display:none;">
+                        <div class="card-header">
+                            <h3 id="subjStatsTitle">Subject Statistics</h3>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead id="subjStatsHead"></thead>
+                                <tbody id="subjStatsBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            
+            <section class="page" id="page-calendar">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>No Class Calendar</h3>
+                        <button class="btn-primary" onclick="showNoClassModal()">
+                            <span class="material-icons">event_busy</span> Add No Class Day
+                        </button>
+                    </div>
+                    <div class="calendar-controls">
+                        <button class="btn-icon" onclick="changeCalendarMonth(-1)">
+                            <span class="material-icons">chevron_left</span>
+                        </button>
+                        <h3 id="calendarMonthLabel"></h3>
+                        <button class="btn-icon" onclick="changeCalendarMonth(1)">
+                            <span class="material-icons">chevron_right</span>
+                        </button>
+                    </div>
+                    <div class="calendar-grid" id="calendarGrid"></div>
+                    <div class="calendar-legend">
+                        <span class="legend-item"><span class="legend-dot legend-today"></span> Today</span>
+                        <span class="legend-item"><span class="legend-dot legend-noclass"></span> No Class</span>
+                    </div>
+                </div>
+
+                
+                <div class="card" style="margin-top:16px">
+                    <div class="card-header">
+                        <h3>No Class Days</h3>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Reason</th>
+                                    <th>Added By</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="noClassTable">
+                                <tr><td colspan="4" class="empty-state">No entries yet</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    
+
+    
+    <div class="modal-overlay" id="instructorModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="instructorModalTitle">Add Instructor</h3>
+                <button class="modal-close" onclick="closeModal('instructorModal')">&times;</button>
+            </div>
+            <form id="instructorForm" onsubmit="saveInstructor(event)">
+                <input type="hidden" id="instructorId">
+                <div class="form-group">
+                    <label>Full Name *</label>
+                    <input type="text" id="instructorName" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Department *</label>
+                    <select id="instructorDept" class="form-input" required>
+                        <option value="">Select department</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="instructorEmail" class="form-input" >
+                </div>
+                <div class="form-group">
+                    <label>Employment Type *</label>
+                    <select id="instructorType" class="form-input" required>
+                        <option value="Full-time">Full-time</option>
+                        <option value="Part-time">Part-time</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('instructorModal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+    <div class="modal-overlay" id="roomModal">
+        <div class="modal" style="max-width: 460px;">
+            <div class="modal-header">
+                <h3 id="roomModalTitle">Add Room</h3>
+                <button class="modal-close" onclick="closeModal('roomModal')">&times;</button>
+            </div>
+            <form id="roomForm" onsubmit="saveRoom(event)">
+                <input type="hidden" id="roomId">
+
+                
+                <div class="form-group">
+                    <label>Building *</label>
+                    <select id="roomBuilding" class="form-input" required onchange="handleRoomBuildingChange()">
+                        <option value="">Select Building</option>
+                        <option value="PM Building">PM Building</option>
+                        <option value="RV Building">RV Building</option>
+                        <option value="JV Building">JV Building</option>
+                        <option value="__custom__">Other / Custom Building...</option>
+                    </select>
+                    <input type="text" id="roomBuildingCustom" class="form-input" placeholder="Enter building name" style="display:none; margin-top:8px;">
+                </div>
+
+                
+                <div class="form-group" id="roomAutoSection" style="display:none; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; margin-bottom:16px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <span style="font-weight:600; font-size:12px; color:var(--text-primary); text-transform:uppercase; letter-spacing:0.5px;">Automatic Room Picker</span>
+                        <button type="button" class="btn-link" id="btnBatchAdd" style="font-size:11px; color:#2563eb; background:none; border:none; cursor:pointer; text-decoration:underline; font-weight:600;" onclick="batchAddRemainingRooms()">
+                            + Add all rooms for this building
+                        </button>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns: 1fr 1.5fr; gap:8px; margin-bottom:8px;">
+                        <div>
+                            <label style="font-size:11px; color:var(--text-secondary); margin-bottom:4px; display:block;">Floor</label>
+                            <select id="roomFloorFilter" class="form-input" style="font-size:12px; padding:6px 8px;" onchange="renderAutoRoomOptions()">
+                                <option value="all">All Floors</option>
+                                <option value="Second Floor">Second Floor (200–208)</option>
+                                <option value="Third Floor">Third Floor (300–308)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size:11px; color:var(--text-secondary); margin-bottom:4px; display:block;">Select Room</label>
+                            <select id="roomAutoSelect" class="form-input" style="font-size:12px; padding:6px 8px;" onchange="handleAutoRoomSelect()">
+                                <option value="">Choose Room</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; color:var(--text-secondary);">
+                        <label style="display:flex; align-items:center; gap:5px; cursor:pointer;">
+                            <input type="checkbox" id="roomPrefixCheckbox" checked onchange="handlePrefixToggle()">
+                            <span>Include building prefix (e.g. <strong id="prefixExampleText">PM 201</strong>)</span>
+                        </label>
+                    </div>
+                </div>
+
+                
+                <div class="form-group">
+                    <label>Room Name *</label>
+                    <input type="text" id="roomName" class="form-input" required placeholder="e.g. PM 201">
+                    <small style="color:var(--text-secondary); font-size:11px; margin-top:4px; display:block;">
+                        Auto-fills from selection above. You can customize with room details (e.g. "PM 201 (TECH LAB)").
+                    </small>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('roomModal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+    <div class="modal-overlay" id="subjectModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="subjectModalTitle">Add Subject</h3>
+                <button class="modal-close" onclick="closeModal('subjectModal')">&times;</button>
+            </div>
+            <form id="subjectForm" onsubmit="saveSubject(event)">
+                <input type="hidden" id="subjectId">
+                <div class="form-group">
+                    <label>Subject Code *</label>
+                    <input type="text" id="subjectCode" class="form-input" placeholder="e.g. CC 105" required>
+                </div>
+                <div class="form-group">
+                    <label>Description / Name *</label>
+                    <input type="text" id="subjectName" class="form-input" placeholder="e.g. Information Management" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('subjectModal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+    <div class="modal-overlay" id="departmentModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="departmentModalTitle">Add Department</h3>
+                <button class="modal-close" onclick="closeModal('departmentModal')">&times;</button>
+            </div>
+            <form id="departmentForm" onsubmit="saveDepartment(event)">
+                <input type="hidden" id="departmentId">
+                <div class="form-group">
+                    <label>Department Code *</label>
+                    <input type="text" id="departmentCode" class="form-input" placeholder="e.g. IT" required>
+                </div>
+                <div class="form-group">
+                    <label>Department Name *</label>
+                    <input type="text" id="departmentName" class="form-input" placeholder="e.g. Information Technology" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('departmentModal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+    <div class="modal-overlay" id="scheduleModal">
+        <div class="modal modal-wide">
+            <div class="modal-header">
+                <h3 id="scheduleModalTitle">Add Schedule</h3>
+                <button class="modal-close" onclick="closeModal('scheduleModal')">&times;</button>
+            </div>
+            <form id="scheduleForm" onsubmit="saveSchedule(event)">
+                <input type="hidden" id="scheduleId">
+                <div class="schedule-modal-layout">
+                    
+                    <div class="schedule-modal-left">
+                        <h4 class="modal-sub-title">
+                            <span class="material-icons">calendar_today</span>
+                            Current Commitments
+                        </h4>
+                        <div id="instructorCurrentScheduleList" class="current-schedule-list">
+                            <div class="no-schedule-msg">Select an instructor to view their current schedule.</div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="schedule-modal-right">
+                        <div class="form-group instructor-select-container">
+                            <label>Instructor *</label>
+                            <div class="custom-select-wrapper">
+                                <input type="text" id="scheduleInstructorSearch" class="form-input" placeholder="Type to search instructor..." autocomplete="off" required>
+                                <input type="hidden" id="scheduleInstructor" required>
+                                <span class="material-icons custom-select-arrow">arrow_drop_down</span>
+                                <div id="instructorSelectDropdown" class="custom-select-dropdown" style="display:none;"></div>
+                            </div>
+                        </div>
+
+                        
+                        <div class="schedule-entries-header">
+                            <label>Schedule Entries</label>
+                            <button type="button" class="btn-add-entry" onclick="addScheduleEntry()">
+                                <span class="material-icons">add_circle</span> Add New
+                            </button>
+                        </div>
+                        <div id="scheduleEntries" class="schedule-entries-list">
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('scheduleModal')">Cancel</button>
+                    <button type="submit" class="btn-primary" id="scheduleSubmitBtn">
+                        <span class="material-icons">save</span> Add Schedule
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+    <div class="modal-overlay" id="scheduleEditModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Edit Schedule</h3>
+                <button class="modal-close" onclick="closeModal('scheduleEditModal')">&times;</button>
+            </div>
+            <form id="scheduleEditForm" onsubmit="updateMergedSchedule(event)">
+                <input type="hidden" id="editSchedIds">
+                <div class="form-group">
+                    <label>Subject *</label>
+                    <select id="editSchedSubject" class="form-input" required>
+                        <option value="">Select subject</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Course / Dept *</label>
+                    <select id="editSchedCourse" class="form-input" required>
+                        <option value="">Select course</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Room *</label>
+                    <select id="editSchedRoom" class="form-input" required>
+                        <option value="">Select room</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Days *</label>
+                    <div class="day-picker" id="editSchedDays">
+                        <label class="day-chip"><input type="checkbox" value="Monday"><span>Mon</span></label>
+                        <label class="day-chip"><input type="checkbox" value="Tuesday"><span>Tue</span></label>
+                        <label class="day-chip"><input type="checkbox" value="Wednesday"><span>Wed</span></label>
+                        <label class="day-chip"><input type="checkbox" value="Thursday"><span>Thu</span></label>
+                        <label class="day-chip"><input type="checkbox" value="Friday"><span>Fri</span></label>
+                        <label class="day-chip"><input type="checkbox" value="Saturday"><span>Sat</span></label>
+                        <label class="day-chip"><input type="checkbox" value="Sunday"><span>Sun</span></label>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Start Time *</label>
+                        <input type="time" id="editSchedStart" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label>End Time *</label>
+                        <input type="time" id="editSchedEnd" class="form-input" required>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('scheduleEditModal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+    <div class="modal-overlay" id="checkerModal">
+        <div class="modal account-modal">
+            <div class="modal-header">
+                <h3>Create User Account</h3>
+                <button class="modal-close" onclick="closeModal('checkerModal')">&times;</button>
+            </div>
+            <form id="checkerForm" onsubmit="createChecker(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>First Name *</label>
+                        <input type="text" id="checkerFirstName" class="form-input" placeholder="Enter first name" autocomplete="given-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Middle Name</label>
+                        <input type="text" id="checkerMiddleName" class="form-input" placeholder="Enter middle name (optional)" autocomplete="additional-name">
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name *</label>
+                        <input type="text" id="checkerLastName" class="form-input" placeholder="Enter last name" autocomplete="family-name" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" id="checkerEmail" class="form-input" placeholder="Enter a unique email address" autocomplete="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password * <small>(min 6 characters)</small></label>
+                    <input type="password" id="checkerPassword" class="form-input" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label>Role *</label>
+                    <select id="checkerRole" class="form-input" required>
+                        <option value="checker">Checker (Mobile App)</option>
+                        <option value="admin">Admin (Web Dashboard)</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('checkerModal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Create Account</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+    <div class="modal-overlay" id="editCheckerModal">
+        <div class="modal account-modal">
+            <div class="modal-header">
+                <h3>Edit User Account</h3>
+                <button class="modal-close" onclick="closeModal('editCheckerModal')">&times;</button>
+            </div>
+            <form id="editCheckerForm" onsubmit="updateChecker(event)">
+                <input type="hidden" id="editCheckerUid">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>First Name *</label>
+                        <input type="text" id="editCheckerFirstName" class="form-input" placeholder="Enter first name" autocomplete="given-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Middle Name</label>
+                        <input type="text" id="editCheckerMiddleName" class="form-input" placeholder="Enter middle name (optional)" autocomplete="additional-name">
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name *</label>
+                        <input type="text" id="editCheckerLastName" class="form-input" placeholder="Enter last name" autocomplete="family-name" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" id="editCheckerEmail" class="form-input" placeholder="Enter a unique email address" autocomplete="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Role *</label>
+                    <select id="editCheckerRole" class="form-input" required>
+                        <option value="checker">Checker (Mobile App)</option>
+                        <option value="admin">Admin (Web Dashboard)</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('editCheckerModal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+    <div class="modal-overlay" id="noClassModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="noClassModalTitle">Add No Class Day</h3>
+                <button class="modal-close" onclick="closeModal('noClassModal')">&times;</button>
+            </div>
+            <form id="noClassForm" onsubmit="saveNoClassDay(event)">
+                <input type="hidden" id="noClassId">
+                <div class="form-group">
+                    <label>Date *</label>
+                    <input type="date" id="noClassDate" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>End Date <small>(optional — for multi-day)</small></label>
+                    <input type="date" id="noClassEndDate" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label>Reason *</label>
+                    <select id="noClassReasonSelect" class="form-input" onchange="toggleCustomReason()">
+                        <option value="">Select a reason...</option>
+                        <option value="Holiday">Holiday</option>
+                        <option value="Class Suspension">Class Suspension</option>
+                        <option value="Faculty Development Day">Faculty Development Day</option>
+                        <option value="Semestral Break">Semestral Break</option>
+                        <option value="Foundation Day">Foundation Day</option>
+                        <option value="Weather Disturbance">Weather Disturbance</option>
+                        <option value="Special Event">Special Event</option>
+                        <option value="Exam Week">Exam Week</option>
+                        <option value="custom">Other (type below)...</option>
+                    </select>
+                </div>
+                <div class="form-group" id="customReasonGroup" style="display:none">
+                    <label>Custom Reason</label>
+                    <input type="text" id="noClassCustomReason" class="form-input" placeholder="Enter reason...">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('noClassModal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+    <div class="modal-overlay" id="instructorInfoModal">
+        <div class="modal modal-wide">
+            <div class="modal-header">
+                <h3>Instructor Profile</h3>
+                <button class="modal-close" onclick="closeModal('instructorInfoModal')">&times;</button>
+            </div>
+            <div class="instructor-profile-layout">
+                
+                <div class="profile-card-left">
+                    <div class="profile-avatar-large" id="profAvatar">D</div>
+                    <h3 class="profile-name" id="profName">Dexter Autor</h3>
+                    <div class="profile-badge-dept" id="profDept">Information Technology</div>
+                    
+                    <div class="profile-meta-list">
+                        <div class="profile-meta-item">
+                            <span class="material-icons">email</span>
+                            <div>
+                                <small>Email Address</small>
+                                <span id="profEmail">dexter@spct.edu.ph</span>
+                            </div>
+                        </div>
+                        <div class="profile-meta-item">
+                            <span class="material-icons">work</span>
+                            <div>
+                                <small>Employment Type</small>
+                                <span id="profType">Full-time</span>
+                            </div>
+                        </div>
+                        <div class="profile-meta-item">
+                            <span class="material-icons">toggle_on</span>
+                            <div>
+                                <small>Status</small>
+                                <span class="status-pill status-active" id="profStatus">Active</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="profile-card-right">
+                    <h4>
+                        <span class="material-icons">calendar_month</span>
+                        Weekly Schedule Commitments
+                    </h4>
+                    <div class="profile-timeline-list" id="profSchedules">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="modal-overlay" id="attendanceLogModal">
+        <div class="modal" style="max-width: 450px;">
+            <div class="modal-header">
+                <h3>Edit Attendance Log</h3>
+                <button class="modal-close" onclick="closeModal('attendanceLogModal')">&times;</button>
+            </div>
+            <form id="attendanceLogForm" onsubmit="saveAttendanceLog(event)">
+                <input type="hidden" id="editLogId">
+                <div class="form-group">
+                    <label>Instructor</label>
+                    <input type="text" id="editLogInstructor" class="form-input" readonly style="background: #f1f5f9;">
+                </div>
+                <div class="form-group">
+                    <label>Subject & Schedule</label>
+                    <input type="text" id="editLogSchedule" class="form-input" readonly style="background: #f1f5f9;">
+                </div>
+                <div class="form-group">
+                    <label>Status *</label>
+                    <select id="editLogStatus" class="form-input" required>
+                        <option value="Present">Present</option>
+                        <option value="Absent">Absent</option>
+                        <option value="Late">Late</option>
+                        <option value="Present (Not Teaching)">Present (Not Teaching)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Remarks</label>
+                    <textarea id="editLogRemarks" class="form-input" rows="3" placeholder="Add details or reason..."></textarea>
+                </div>
+                <div class="modal-actions" style="margin-top: 20px;">
+                    <button type="button" class="btn-secondary" onclick="closeModal('attendanceLogModal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    
+    <div class="toast" id="toast"></div>
+
+    
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js?v=4"></script>
+    <script src="js/dashboard.js?v=21"></script>
+</body>
+</html>

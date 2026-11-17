@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup Admin Account</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #1a1a2e; color: #fff; margin: 0; }
+        .container { background: #16213e; padding: 40px; border-radius: 12px; max-width: 500px; width: 90%; text-align: center; }
+        h1 { color: #4ecca3; margin-bottom: 10px; }
+        p { color: #ccc; }
+        .status { margin-top: 20px; padding: 15px; border-radius: 8px; font-weight: bold; }
+        .success { background: #1b4332; color: #52b788; }
+        .error { background: #3d0000; color: #ff6b6b; }
+        .loading { background: #1a1a3e; color: #a29bfe; }
+        a { color: #4ecca3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Setting up Admin Account...</h1>
+        <p>Creating admin record in Firestore for<br><strong>notedbook96@gmail.com</strong></p>
+        <div id="status" class="status loading">Working...</div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "YOUR_GOOGLE_API_KEY",
+            authDomain: "attendance-79839.firebaseapp.com",
+            projectId: "attendance-79839",
+            storageBucket: "attendance-79839.firebasestorage.app",
+            messagingSenderId: "205434543166",
+            appId: "1:205434543166:web:354b4a7e202b3ad09f856f"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        const statusEl = document.getElementById('status');
+
+        async function setupAdmin() {
+            try {
+                await db.collection('users').doc('ErDlBRmrDoPi4va7BlvaXM9t15G2').set({
+                    email: 'notedbook96@gmail.com',
+                    fullName: 'Admin',
+                    role: 'admin',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                statusEl.className = 'status success';
+                statusEl.innerHTML = '&#10004; Admin account created successfully!<br><br><a href="index.html">Go to Login Page &rarr;</a>';
+            } catch (error) {
+                statusEl.className = 'status error';
+                statusEl.innerHTML = '&#10008; Error: ' + error.message + '<br><br>Make sure your Firestore rules allow writes.';
+            }
+        }
+
+        setupAdmin();
+    </script>
+</body>
+</html>

@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clark R. Carceller | Portfolio</title>
+  <meta name="description" content="Portfolio of Clark R. Carceller - 1st Year BSIT Student and Aspiring Web Developer.">
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  
+  <link rel="stylesheet" href="style.css">
+  
+  
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000000' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='16 18 22 12 16 6'></polyline><polyline points='8 6 2 12 8 18'></polyline></svg>">
+</head>
+<body>
+
+  
+  <aside class="edit-toolbar" id="editToolbar" aria-label="Editor Toolbar">
+    <div class="toolbar-content">
+      <span class="toolbar-status" id="toolbarStatus">
+        <span class="status-pulse-indicator locked" id="statusDot"></span>
+        <span id="statusText">Portfolio Mode (Read-Only)</span>
+      </span>
+      <div class="toolbar-actions">
+        
+        <button type="button" class="btn-tool btn-tool-primary" id="unlockEditBtn" title="Unlock live editing">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          <span>Unlock Edit</span>
+        </button>
+
+        
+        <button type="button" class="btn-tool" id="saveExportBtn" title="Download updated index.html with all your edits permanently saved" style="display:none;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Export HTML
+        </button>
+        <button type="button" class="btn-tool" id="resetEditsBtn" title="Reset all text back to defaults" style="display:none;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+          Reset
+        </button>
+        <button type="button" class="btn-tool btn-tool-lock" id="lockEditBtn" title="Lock editing mode" style="display:none;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          Lock
+        </button>
+
+        
+        <button type="button" class="btn-tool" id="savePdfBtn" title="Save this portfolio as a PDF document">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          Save as PDF
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  
+  <div class="auth-modal" id="passwordModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="auth-backdrop" id="authBackdrop"></div>
+    <div class="auth-dialog">
+      <button type="button" class="auth-close" id="authClose" aria-label="Close dialog">&times;</button>
+      <div class="auth-icon-wrap">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+      </div>
+      <h3 class="auth-title">Enter Edit Passcode</h3>
+      <p class="auth-desc">Enter your administrator passcode to unlock live editing.</p>
+      
+      <form id="passwordForm" class="auth-form" onsubmit="return false;">
+        <div class="auth-input-wrap">
+          <input type="password" id="passwordInput" class="auth-input" placeholder="Enter passcode" autocomplete="current-password" autofocus required>
+        </div>
+        <p class="auth-error-msg" id="authErrorMsg">Incorrect passcode. Try again.</p>
+        <div class="auth-actions">
+          <button type="button" class="btn-auth-cancel" id="authCancelBtn">Cancel</button>
+          <button type="submit" class="btn-auth-submit" id="authSubmitBtn">Unlock</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  
+  
+  
+  <header class="navbar-wrapper">
+    <div class="container navbar">
+      
+      <a href="#home" class="brand-logo" aria-label="Clark R. Carceller Home">
+        <span class="code-symbol" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+          </svg>
+        </span>
+        <span class="brand-name" contenteditable="true" spellcheck="false" data-editable="brand-name">Clark R. Carceller</span>
+      </a>
+
+      
+      <nav class="nav-menu" aria-label="Main Navigation">
+        <a href="#home" class="nav-link active"><span contenteditable="true" spellcheck="false" data-editable="nav-home">Home</span></a>
+        <a href="#projects" class="nav-link"><span contenteditable="true" spellcheck="false" data-editable="nav-projects">Projects</span></a>
+        <a href="#skills" class="nav-link"><span contenteditable="true" spellcheck="false" data-editable="nav-skills">Skills</span></a>
+        <a href="#contact" class="nav-link"><span contenteditable="true" spellcheck="false" data-editable="nav-contact">Contact</span></a>
+      </nav>
+
+      
+      <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  
+  
+  
+  <section class="hero-section" id="home">
+    <div class="container hero-container">
+      
+      
+      <div class="hero-content">
+        
+        <div class="hero-badge">
+          <span class="badge-icon" aria-hidden="true">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+          </span>
+          <span contenteditable="true" spellcheck="false" data-editable="hero-badge">Portfolio</span>
+        </div>
+
+        
+        <h1 class="hero-title" contenteditable="true" spellcheck="false" data-editable="hero-title">Clark R. Carceller</h1>
+
+        
+        <p class="hero-subtitle" contenteditable="true" spellcheck="false" data-editable="hero-subtitle">1st Year BSIT Student | Aspiring Web Developer</p>
+
+        
+        <p class="hero-bio" contenteditable="true" spellcheck="false" data-editable="hero-bio">
+          I'm a 1st year BSIT student interested in building practical and user-friendly software solutions. I enjoy learning programming and developing projects that solve everyday problems.
+        </p>
+
+        
+        <div class="hero-actions">
+          <a href="#projects" class="btn btn-primary">
+            <span contenteditable="true" spellcheck="false" data-editable="btn-projects">View Projects</span>
+            <svg class="btn-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+          <a href="#contact" class="btn btn-outline">
+            <span contenteditable="true" spellcheck="false" data-editable="btn-contact">Contact</span>
+          </a>
+        </div>
+      </div>
+
+      
+      <div class="hero-visual">
+        <div class="visual-wrapper">
+          
+          <div class="visual-glow glow-1"></div>
+          <div class="visual-glow glow-2"></div>
+
+          
+          <div class="floating-widget widget-browser" aria-hidden="true">
+            <div class="widget-header">
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
+            </div>
+            <div class="widget-lines">
+              <div class="line line-1"></div>
+              <div class="line line-2"></div>
+              <div class="line line-3"></div>
+            </div>
+          </div>
+
+          
+          <div class="floating-widget widget-gear" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+          </div>
+
+          
+          <div class="floating-widget widget-code" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+          </div>
+
+          
+          <div class="hero-photo-card" data-editable-img="profile-photo" title="Click to view full image or change photo">
+            <div class="photo-frame">
+              <img src="assets/images/clark-profile.png" alt="Clark R. Carceller - Profile Photo" class="profile-photo" id="profilePhotoImg" loading="eager">
+              <div class="change-image-badge">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                <span>Change Photo</span>
+              </div>
+            </div>
+            
+            <div class="photo-badge">
+              <span class="badge-dot"></span>
+              <span contenteditable="true" spellcheck="false" data-editable="photo-badge">1st Year BSIT</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  
+  
+  
+  <section class="section-skills" id="skills">
+    <div class="container">
+      <div class="skills-card">
+        
+        
+        <div class="skills-header">
+          <div class="skills-icon-wrap" aria-hidden="true">
+            
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+          </div>
+          <div class="skills-text">
+            <h2 class="skills-title" contenteditable="true" spellcheck="false" data-editable="skills-title">Technical Skills</h2>
+            <p class="skills-desc" contenteditable="true" spellcheck="false" data-editable="skills-desc">Programming languages and tools I'm familiar with.</p>
+          </div>
+        </div>
+
+        
+        <div class="skills-divider" aria-hidden="true"></div>
+
+        
+        <div class="skills-list" id="skillsList" aria-label="Technologies list">
+          <span class="skill-pill" contenteditable="true" spellcheck="false" data-editable="skill-1">HTML</span>
+          <span class="skill-pill" contenteditable="true" spellcheck="false" data-editable="skill-2">CSS</span>
+          <span class="skill-pill" contenteditable="true" spellcheck="false" data-editable="skill-3">JavaScript</span>
+          <span class="skill-pill" contenteditable="true" spellcheck="false" data-editable="skill-4">C++</span>
+          <span class="skill-pill" contenteditable="true" spellcheck="false" data-editable="skill-5">MySQL</span>
+          <button type="button" class="btn-add-skill" id="addSkillBtn" title="Add another skill tag">+ Add Skill</button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  
+  
+  
+  <section class="section-projects" id="projects">
+    <div class="container">
+      
+      
+      <div class="section-heading">
+        <div class="section-title-wrap">
+          <span class="section-code-icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+          </span>
+          <h2 class="section-title" contenteditable="true" spellcheck="false" data-editable="projects-heading">Projects</h2>
+        </div>
+        <p class="section-subtitle" contenteditable="true" spellcheck="false" data-editable="projects-subheading">A selection of projects I have completed or worked on.</p>
+      </div>
+
+      
+      <div class="projects-grid">
+        
+        
+        <article class="project-card">
+          <div class="project-preview-wrap project-has-image" data-editable-img="project-1" data-img-src="assets/images/canteen-cashless.png" data-img-title="Payvex - Canteen Cashless System">
+            <img src="assets/images/canteen-cashless.png" alt="Payvex Canteen Cashless System" class="project-image-preview" loading="lazy">
+            <div class="image-overlay-zoom" title="Click to view full image">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+              <span>View Screenshot</span>
+            </div>
+            <div class="change-image-badge">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+              <span>Change Image</span>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3 class="project-title" contenteditable="true" spellcheck="false" data-editable="project-title-1">Canteen Cashless System</h3>
+            <p class="project-desc" contenteditable="true" spellcheck="false" data-editable="project-desc-1">A system concept for cashless transactions in a school canteen.</p>
+          </div>
+        </article>
+
+        
+        <article class="project-card">
+          <div class="project-preview-wrap project-has-image" data-editable-img="project-2" data-img-src="assets/images/calculator-app.png" data-img-title="Calculator Application (Visual Studio)">
+            <img src="assets/images/calculator-app.png" alt="Calculator Application" class="project-image-preview" loading="lazy">
+            <div class="image-overlay-zoom" title="Click to view full image">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+              <span>View Screenshot</span>
+            </div>
+            <div class="change-image-badge">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+              <span>Change Image</span>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3 class="project-title" contenteditable="true" spellcheck="false" data-editable="project-title-2">Calculator Application</h3>
+            <p class="project-desc" contenteditable="true" spellcheck="false" data-editable="project-desc-2">A basic calculator developed using Microsoft Visual Studio.</p>
+          </div>
+        </article>
+
+        
+        <article class="project-card">
+          <div class="project-preview-wrap project-has-image preview-portfolio-wrap" data-editable-img="project-3" data-img-title="Personal Portfolio">
+            
+            <svg viewBox="0 0 240 160" class="project-svg">
+              
+              <rect x="50" y="24" width="140" height="106" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="2"/>
+              
+              <path d="M50 32 C50 27, 54 24, 58 24 L182 24 C186 24, 190 27, 190 32 L190 42 L50 42 Z" fill="#18181b"/>
+              
+              <circle cx="62" cy="33" r="2.5" fill="#71717a"/>
+              <circle cx="70" cy="33" r="2.5" fill="#71717a"/>
+              <circle cx="78" cy="33" r="2.5" fill="#71717a"/>
+              
+              
+              <rect x="62" y="52" width="40" height="38" rx="4" fill="#f4f4f5" stroke="#e4e4e7" stroke-width="1.5"/>
+              <polygon points="65,84 80,66 98,84" fill="#d4d4d8"/>
+              <circle cx="90" cy="62" r="3" fill="#a1a1aa"/>
+
+              
+              <line x1="112" y1="58" x2="175" y2="58" stroke="#18181b" stroke-width="3" stroke-linecap="round"/>
+              <line x1="112" y1="67" x2="165" y2="67" stroke="#a1a1aa" stroke-width="2.5" stroke-linecap="round"/>
+              <line x1="112" y1="75" x2="170" y2="75" stroke="#d4d4d8" stroke-width="2.5" stroke-linecap="round"/>
+              <line x1="112" y1="83" x2="150" y2="83" stroke="#e4e4e7" stroke-width="2.5" stroke-linecap="round"/>
+
+              
+              <line x1="62" y1="104" x2="178" y2="104" stroke="#e4e4e7" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <div class="change-image-badge">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+              <span>Upload Screenshot</span>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3 class="project-title" contenteditable="true" spellcheck="false" data-editable="project-title-3">Personal Portfolio</h3>
+            <p class="project-desc" contenteditable="true" spellcheck="false" data-editable="project-desc-3">A personal website showcasing my skills and projects.</p>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  
+  
+  
+  <section class="section-contact" id="contact">
+    <div class="container">
+      <div class="contact-card">
+        
+        
+        <div class="contact-header">
+          <div class="contact-icon-wrap" aria-hidden="true">
+            
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </div>
+          <div class="contact-text">
+            <h2 class="contact-title" contenteditable="true" spellcheck="false" data-editable="contact-title">Contact</h2>
+            <p class="contact-desc" contenteditable="true" spellcheck="false" data-editable="contact-desc">Get in touch with me through any of these platforms.</p>
+          </div>
+        </div>
+
+        
+        <div class="contact-divider" aria-hidden="true"></div>
+
+        
+        <div class="contact-actions">
+          
+          
+          <a href="https://github.com/carcellerclark2001-png" target="_blank" rel="noopener noreferrer" class="btn-social" id="githubLink" title="GitHub: carcellerclark2001-png">
+            <span class="social-icon">
+              
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#000000">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+              </svg>
+            </span>
+            <span class="social-label" contenteditable="true" spellcheck="false" data-editable="github-label">GitHub</span>
+          </a>
+
+          
+          <a href="https://www.facebook.com/Carceller2001#." target="_blank" rel="noopener noreferrer" class="btn-social" id="facebookLink" title="Facebook: Carceller2001">
+            <span class="social-icon">
+              
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#000000">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+              </svg>
+            </span>
+            <span class="social-label" contenteditable="true" spellcheck="false" data-editable="facebook-label">Facebook</span>
+          </a>
+
+          
+          <a href="mailto:carcellerclark2001@gmail.com" class="btn-social btn-email" id="emailLink" title="Send email to carcellerclark2001@gmail.com">
+            <span class="social-icon">
+              
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+            </span>
+            <span class="social-label" contenteditable="true" spellcheck="false" data-editable="email-label">carcellerclark2001@gmail.com</span>
+          </a>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  
+  
+  
+  <footer class="site-footer">
+    
+    <div class="footer-wave" aria-hidden="true">
+      <svg viewBox="0 0 1440 70" preserveAspectRatio="none">
+        <path d="M0,35 C320,70, 720,10, 1080,45 C1240,60, 1360,40, 1440,30 L1440,70 L0,70 Z" fill="#09090b"></path>
+      </svg>
+    </div>
+
+    <div class="footer-inner">
+      <div class="container footer-container">
+        
+        
+        <div class="footer-brand">
+          <span class="footer-code-symbol" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+          </span>
+          <span class="footer-name" contenteditable="true" spellcheck="false" data-editable="footer-name">Clark R. Carceller</span>
+        </div>
+
+        
+        <div class="footer-divider-glow" aria-hidden="true"></div>
+
+        
+        <div class="footer-tagline" contenteditable="true" spellcheck="false" data-editable="footer-tagline">
+          1st Year BSIT Student | Aspiring Web Developer
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
+  
+  <div class="lightbox-modal" id="imageLightbox" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="lightbox-backdrop" id="lightboxBackdrop"></div>
+    <div class="lightbox-dialog">
+      <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Close image preview">&times;</button>
+      <img src="" alt="Full preview" id="lightboxImg" class="lightbox-content">
+      <p class="lightbox-caption" id="lightboxCaption"></p>
+    </div>
+  </div>
+
+  
+  <input type="file" id="imageFileInput" accept="image/*" style="display:none;" aria-hidden="true">
+
+  
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+name: attendance_app
+description: Mobile-Based Attendance Monitoring System for College Instructors
+
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Firebase
+  firebase_core: any
+  firebase_auth: any
+  cloud_firestore: any
+
+  # UI & Utilities
+  cupertino_icons: any
+  google_fonts: any
+  intl: any
+  connectivity_plus: any
+  shared_preferences: any
+  fluttertoast: any
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: any
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
